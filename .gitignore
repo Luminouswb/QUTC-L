@@ -1,0 +1,29 @@
+# 构建产物
+target/
+dist/
+build/output/
+*.class
+
+# 启动器运行期数据（真机测试生成，不入库）
+launcher.json
+logs/
+cache/
+accounts/
+versions/
+shared/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.settings/
+.classpath
+.project
+
+# 系统
+Thumbs.db
+desktop.ini
+*.log
+
+# 临时测试残留
+_tmp/

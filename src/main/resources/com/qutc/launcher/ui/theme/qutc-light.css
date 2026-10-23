@@ -1,0 +1,305 @@
+/* QUTC Launcher 浅色主题（阶段 11）—— 在 qutc.css 之后加载，覆盖颜色 */
+
+.root {
+    -fx-background-color: transparent;
+    -fx-accent: #4F6FE8;
+    -fx-focus-color: #4F6FE8;
+}
+
+.app-shell {
+    -fx-background-color: linear-gradient(to bottom right, #F8F9FC, #EFF2F8 55%, #F2F4F9);
+    -fx-border-color: #DCE2EE;
+    -fx-effect: dropshadow(gaussian, rgba(20, 30, 60, 0.16), 26, 0.15, 0, 10);
+}
+
+.title-brand {
+    -fx-text-fill: #1B2130;
+}
+
+.title-sub {
+    -fx-text-fill: #7B8598;
+}
+
+.window-button {
+    -fx-text-fill: #6B7488;
+}
+
+.window-button:hover {
+    -fx-background-color: #E7EBF4;
+    -fx-text-fill: #1B2130;
+}
+
+.window-button-close:hover {
+    -fx-background-color: #E5484D;
+    -fx-text-fill: #FFFFFF;
+}
+
+.nav-bar {
+    -fx-background-color: rgba(255, 255, 255, 0.82);
+}
+
+.nav-button {
+    -fx-text-fill: #545E72;
+}
+
+.nav-button:hover {
+    -fx-background-color: #E9EDF6;
+    -fx-text-fill: #1B2130;
+}
+
+.nav-button-selected {
+    -fx-background-color: linear-gradient(to right, rgba(79, 111, 232, 0.18), rgba(124, 92, 255, 0.08));
+    -fx-text-fill: #1B2130;
+    -fx-border-color: rgba(79, 111, 232, 0.5);
+}
+
+.nav-footer {
+    -fx-text-fill: #8A93A6;
+}
+
+.page-title {
+    -fx-text-fill: #141821;
+}
+
+.page-subtitle {
+    -fx-text-fill: #6C7688;
+}
+
+.card {
+    -fx-background-color: linear-gradient(to bottom, #FFFFFF, #FAFBFE);
+    -fx-border-color: #E1E6F0;
+    -fx-effect: dropshadow(gaussian, rgba(20, 30, 60, 0.10), 14, 0.1, 0, 5);
+}
+
+.card-title {
+    -fx-text-fill: #3B4559;
+}
+
+.muted {
+    -fx-text-fill: #7B8598;
+}
+
+.value-big {
+    -fx-text-fill: #141821;
+}
+
+.button-primary {
+    -fx-text-fill: #FFFFFF;
+}
+
+.button-ghost {
+    -fx-background-color: #EDF0F7;
+    -fx-text-fill: #3B4559;
+}
+
+.button-ghost:hover {
+    -fx-background-color: #E2E7F1;
+}
+
+.button-danger {
+    -fx-background-color: rgba(229, 72, 77, 0.12);
+    -fx-text-fill: #C93B40;
+}
+
+.button-danger:hover {
+    -fx-background-color: rgba(229, 72, 77, 0.20);
+}
+
+.combo-box, .text-field, .password-field, .spinner, .choice-box {
+    -fx-background-color: #F4F6FB;
+    -fx-text-fill: #1B2130;
+    -fx-border-color: #DCE2EE;
+    -fx-prompt-text-fill: #98A1B3;
+}
+
+.combo-box:hover, .text-field:hover, .choice-box:hover {
+    -fx-border-color: #C3CCDD;
+}
+
+.combo-box .list-cell, .choice-box .label, .check-box {
+    -fx-text-fill: #1B2130;
+}
+
+.combo-box-popup .list-view, .choice-box-popup .list-view {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #DCE2EE;
+}
+
+.combo-box-popup .list-cell, .choice-box-popup .list-cell {
+    -fx-text-fill: #1B2130;
+}
+
+.combo-box-popup .list-cell:filled:hover, .choice-box-popup .list-cell:filled:hover {
+    -fx-background-color: #EDF1FA;
+}
+
+.check-box .box {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #C3CCDD;
+}
+
+.check-box:selected .box {
+    -fx-background-color: #4F6FE8;
+    -fx-border-color: #4F6FE8;
+}
+
+.list-view, .table-view {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.list-cell {
+    -fx-text-fill: #2E3647;
+    -fx-background-color: transparent;
+}
+
+.list-cell:filled:hover {
+    -fx-background-color: #EDF1FA;
+}
+
+.list-cell:filled:selected {
+    -fx-background-color: #E2E9FB;
+    -fx-text-fill: #141821;
+}
+
+.table-row-cell {
+    -fx-text-fill: #2E3647;
+    -fx-background-color: #FFFFFF;
+}
+
+.table-row-cell:hover {
+    -fx-background-color: #EDF1FA;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #E2E9FB;
+}
+
+.table-cell {
+    -fx-text-fill: #2E3647;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: #F1F4FA;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: #545E72;
+}
+
+.version-card {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #E1E6F0;
+}
+
+.version-card:hover {
+    -fx-background-color: #FBFCFE;
+    -fx-border-color: #C9D3E8;
+}
+
+.version-name {
+    -fx-text-fill: #141821;
+}
+
+.version-meta {
+    -fx-text-fill: #6C7688;
+}
+
+.account-chip {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #DCE2EE;
+}
+
+.account-chip:hover {
+    -fx-background-color: #F4F6FB;
+}
+
+.progress-bar > .track {
+    -fx-background-color: #E6EAF3;
+}
+
+.dialog-pane {
+    -fx-background-color: #FFFFFF;
+}
+
+.dialog-pane .label,
+.dialog-pane .content.label {
+    -fx-text-fill: #1B2130;
+}
+
+.dialog-pane .button {
+    -fx-background-color: #EDF0F7;
+    -fx-text-fill: #1B2130;
+}
+
+.dialog-pane .button:hover {
+    -fx-background-color: #E2E7F1;
+}
+
+.placeholder-title {
+    -fx-text-fill: #141821;
+}
+
+.placeholder-text {
+    -fx-text-fill: #6C7688;
+}
+
+.tab-pane .tab-header-area .tab-header-background {
+    -fx-background-color: transparent;
+}
+
+.tab-pane .tab {
+    -fx-background-color: #EDF0F7;
+}
+
+.tab-pane .tab .tab-label {
+    -fx-text-fill: #545E72;
+}
+
+.tab-pane .tab:selected {
+    -fx-background-color: #DCE5FB;
+}
+
+.tab-pane .tab:selected .tab-label {
+    -fx-text-fill: #1B2130;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: #C7CFDD;
+}
+
+.scroll-bar .thumb:hover {
+    -fx-background-color: #AAB5C9;
+}
+
+.tooltip {
+    -fx-background-color: #1B2130;
+    -fx-text-fill: #F2F4F8;
+}
+
+/* 浅色主题：账号弹层 */
+.account-popup { -fx-background-color: #ffffff; -fx-border-color: rgba(20, 30, 60, 0.10); }
+.account-popup-name { -fx-text-fill: #1b2440; }
+.account-popup-meta { -fx-text-fill: #6b7488; }
+.account-popup-row:hover { -fx-background-color: rgba(108, 92, 231, 0.10); }
+.account-popup-row-active { -fx-background-color: rgba(108, 92, 231, 0.16); }
+.account-popup-row-name { -fx-text-fill: #202a44; }
+.account-popup-check { -fx-text-fill: #6c5ce7; }
+.account-popup-action { -fx-text-fill: #26304c; }
+.account-popup-icon { -fx-text-fill: #6c5ce7; }
+.account-popup-sep { -fx-background-color: rgba(20, 30, 60, 0.10); }
+.badge-local { -fx-background-color: rgba(64, 140, 255, 0.14); -fx-text-fill: #2f6fd0; }
+.badge-imported { -fx-background-color: rgba(214, 140, 40, 0.15); -fx-text-fill: #b87317; }
+.badge-danger { -fx-background-color: rgba(220, 70, 70, 0.14); -fx-text-fill: #c23a3a; }
+/* ---------- 主页版本磁贴（浅色） ---------- */
+.version-tile { -fx-background-color: rgba(20, 30, 60, 0.035); }
+.version-tile:hover {
+    -fx-background-color: rgba(20, 30, 60, 0.07);
+    -fx-border-color: rgba(108, 92, 231, 0.45);
+}.version-tile-selected {
+    -fx-border-color: rgba(108, 92, 231, 0.75);
+    -fx-background-color: rgba(108, 92, 231, 0.14);
+}
+.sub-nav-button { -fx-text-fill: #5b6478; }
+.sub-nav-button:hover { -fx-background-color: rgba(20, 30, 60, 0.06); -fx-text-fill: #232c42; }
+.sub-nav-button-selected { -fx-background-color: rgba(108, 92, 231, 0.14); -fx-text-fill: #4b3fc0; }
