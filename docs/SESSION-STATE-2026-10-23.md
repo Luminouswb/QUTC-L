@@ -158,3 +158,18 @@ src/main/java/com/qutc/launcher
 - 截图验证 GUI：`Invoke-CimMethod` 启动 → `SetWindowPos TOPMOST` → `CopyFromScreen` 截图，结束后恢复 NOTOPMOST。
 - 用户在看屏幕时**不要抢鼠标/键盘**，尽量只做后台操作；需要点击时先说明。
 - 中文注释/UI 文案保持现有风格；不做与请求无关的“顺手重构”。
+
+## 8. GitHub 仓库
+
+- 远端：`https://github.com/Luminouswb/QUTC-L.git`（分支 `main`）
+- 已推送：`51f9855`（初始 `10e2676` + UI 迭代），135 个文件、约 1 MB，不含 target/编译产物/账号数据。
+- 更新流程：
+
+```powershell
+cd "C:\Users\独钓寒江雪\Desktop\大肥鱼工作区\QUTC"
+git add -A
+git commit -m "说明这次改了什么"
+git push
+```
+
+- 凭据由 Windows 凭据管理器（Git Credential Manager）保存，推送不再需要手动登录。
