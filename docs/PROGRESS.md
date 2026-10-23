@@ -882,3 +882,35 @@ UI 美化收尾：浅色主题、主题切换持久化、列表/徽标细节打�
 - 新增 `scripts/run-dev.cmd`（纯 ASCII，CRLF，用 `%~dp0` 定位项目）：class 缺失时先 `mvn -o -q compile`，然后用 `javaw` 启动开发态（数据目录 `..\_mc-data`）。**注意：.cmd 必须 CRLF + 不用中文路径字面量**，否则 cmd 按 ANSI 解析会报 “'xxx' is not recognized”。
 - 桌面创建快捷方式「QUTC 启动器（开发版）」→ `cmd /c run-dev.cmd`，图标 `build/resources/QUTC.ico`，最小化窗口。未打包（项目未完成）。
 - 截图：`target/ui104-contain-mode.png`（contain 模式）。
+## 字体层级搭配（2026-10-23）
+
+目标：不同字体分工，形成层次（展示/正文/数值/等宽/导航/按钮各司其职）。
+
+| 角色 | 字体 | 说明 |
+|---|---|---|
+| 页面大标题（开始你的冒险） | **幼圆** 加粗 26px | 圆润、友好，白色 + 轻光晕 |
+| 副标题 | **等线 Light** 13px | 纤细，与大标题形成粗细对比 |
+| 卡片标题 / 正文 / 版本名 | **微软雅黑 UI**（标题加粗） | 标准 UI 字体，保证可读 |
+| 数值（4.0 GB / Java 21） | **Segoe UI Semibold** 23px | 西文数字更硬朗 |
+| 元信息 / 路径 | **等线 Light** 12px | 弱化为辅助信息 |
+| 左侧主导航 | 雅黑常规 13.5px（提亮） | 选中项切换为**幼圆加粗白色** |
+| 二级分类（下载中心） | 雅黑常规（选中幼圆加粗） | 同主导航逻辑 |
+| 主按钮（开始游戏） | **幼圆** 加粗 16px | CTA 更圆润醒目 |
+| 徽标 badge | 雅黑加粗 11px | 小号清晰 |
+| 日志 / 参数文本 | **Consolas** 12px | 等宽，和 UI 字体拉开层次 |
+
+- 截图：`target/ui110-fonts.png`（暗色）、`target/ui111-fonts-light.png`（浅色日志页）、`target/ui112-fonts-dark.png`（最终暗色主页）。
+- 全部通过 CSS 覆盖实现（`qutc.css` 末尾），浅色主题自动继承字体、仅覆盖颜色。
+## 字体强化（标题/主按钮）
+
+- `.page-title` → 幼圆 31px、weight 900、白色 + 白色光晕（`dropshadow` 0 偏移）；有背景图时用更强白色发光（rgba(255,255,255,0.50), 16px）。
+- `.button-primary` → 微软雅黑 UI Bold 17px（比幼圆更粗）+ 白色发光，hover 光晕更大（18px）。
+- 说明：幼圆没有独立 Bold 字重，用「字号 + 光晕」模拟加粗；按钮改用雅黑 Bold 以获得真实粗体。
+- 截图：`target/ui113-title-glow.png`。
+## 字体选择（用户自选）
+
+- `LauncherConfig` 新增 `navFont` / `homeFont` / `labelFont`（空=主题默认），`normalize()` 做 CSS 注入清洗。
+- `ThemeManager.fontCss()`：把三类选择合成 CSS（`nav-button/sub-nav-button`、`page-title/page-subtitle/button-primary`、`card-title/version-name/version-meta/badge/value-big/tab-label`），与强调色一起挂到一个 data URI 样式表，保存后立即生效。
+- 设置页新增「字体」卡：左侧导航 / 主页标题与按钮 / 标注与说明 三个下拉，选项来自 `Font.getFamilies()`（系统已装字体），带「默认（主题字体）」项。
+- 真机验证：选 等线(导航)+微软雅黑(主页)+等线(标注) 后重启，标题/导航/按钮字形全部变化；截图 `target/ui125-home-custom-font.png`、字体卡 `target/ui122-font-picker.png`。
+- 测试：144/144 通过；字体为空时回退主题默认搭配。

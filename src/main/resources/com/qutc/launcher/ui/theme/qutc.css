@@ -594,3 +594,143 @@
     -fx-text-fill: rgba(255, 255, 255, 0.88);
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.65), 10, 0.3, 0, 1);
 }
+/* ---------- 字体：更粗 / 更圆 / 更亮 ---------- */
+.page-title {
+    -fx-font-family: "幼圆", "Microsoft YaHei UI", "Microsoft YaHei";
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #FFFFFF;
+    -fx-effect: dropshadow(gaussian, rgba(140, 160, 255, 0.35), 7, 0.25, 0, 0);
+}
+.page-subtitle {
+    -fx-font-family: "幼圆", "Microsoft YaHei UI", "Microsoft YaHei";
+    -fx-font-size: 13px;
+    -fx-text-fill: #AEB9CF;
+}
+.nav-button {
+    -fx-font-family: "幼圆", "Microsoft YaHei UI", "Microsoft YaHei";
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #DDE4F2;
+}
+.nav-button:hover { -fx-text-fill: #FFFFFF; }
+.nav-button-selected {
+    -fx-font-family: "幼圆", "Microsoft YaHei UI", "Microsoft YaHei";
+    -fx-font-weight: bold;
+    -fx-text-fill: #FFFFFF;
+}
+.button-primary {
+    -fx-font-family: "幼圆", "Microsoft YaHei UI", "Microsoft YaHei";
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #FFFFFF;
+}
+/* ---------- 字体层级搭配（2026-10-23） ----------
+   展示标题=幼圆（圆润）· 副标题=等线 Light（纤细对比）
+   卡片标题/正文=微软雅黑 UI · 数值=Segoe UI Semibold
+   主导航=雅黑常规 / 选中=幼圆加粗 · 主按钮=幼圆加粗
+*/
+.page-title {
+    -fx-font-family: "幼圆", "Microsoft YaHei UI";
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #FFFFFF;
+    -fx-effect: dropshadow(gaussian, rgba(150, 170, 255, 0.30), 6, 0.22, 0, 0);
+}
+.page-subtitle {
+    -fx-font-family: "DengXian Light", "等线 Light", "Microsoft YaHei UI";
+    -fx-font-size: 13px;
+    -fx-text-fill: #A9B4CA;
+}
+.card-title {
+    -fx-font-family: "Microsoft YaHei UI", "Microsoft YaHei";
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #B9C4DA;
+}
+.value-big {
+    -fx-font-family: "Segoe UI Semibold", "Microsoft YaHei UI";
+    -fx-font-size: 23px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #FFFFFF;
+}
+.version-name {
+    -fx-font-family: "Microsoft YaHei UI", "Microsoft YaHei";
+    -fx-font-size: 14.5px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #F2F5FA;
+}
+.version-meta {
+    -fx-font-family: "DengXian Light", "等线 Light", "Microsoft YaHei UI";
+    -fx-font-size: 12px;
+    -fx-text-fill: #93A0B8;
+}
+.nav-button {
+    -fx-font-family: "Microsoft YaHei UI", "Microsoft YaHei";
+    -fx-font-size: 13.5px;
+    -fx-font-weight: normal;
+    -fx-text-fill: #DCE4F5;
+}
+.nav-button:hover { -fx-text-fill: #FFFFFF; }
+.nav-button-selected {
+    -fx-font-family: "幼圆", "Microsoft YaHei UI";
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #FFFFFF;
+}
+.sub-nav-button {
+    -fx-font-family: "Microsoft YaHei UI", "Microsoft YaHei";
+    -fx-font-size: 13.5px;
+    -fx-text-fill: #D5DDEE;
+}
+.sub-nav-button-selected {
+    -fx-font-family: "幼圆", "Microsoft YaHei UI";
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #FFFFFF;
+}
+.button-primary {
+    -fx-font-family: "幼圆", "Microsoft YaHei UI";
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #FFFFFF;
+}
+.badge {
+    -fx-font-family: "Microsoft YaHei UI", "Microsoft YaHei";
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+}
+.tab-pane > .tab-header-area .tab .tab-label {
+    -fx-font-family: "Microsoft YaHei UI", "Microsoft YaHei";
+    -fx-font-weight: bold;
+}/* 日志等宽字体：与 UI 字体形成层次 */
+.text-area .content {
+    -fx-font-family: "Consolas", "Cascadia Mono", "Microsoft YaHei UI";
+    -fx-font-size: 12px;
+}
+/* ---------- 标题/主按钮再强化：更大更粗 + 发光 ---------- */
+.page-title {
+    -fx-font-family: "幼圆", "Microsoft YaHei UI";
+    -fx-font-size: 31px;
+    -fx-font-weight: 900;
+    -fx-text-fill: #FFFFFF;
+    -fx-effect: dropshadow(gaussian, rgba(190, 205, 255, 0.55), 14, 0.38, 0, 0);
+}
+.page-subtitle {
+    -fx-font-size: 13px;
+}
+.button-primary {
+    -fx-font-family: "Microsoft YaHei UI", "幼圆";
+    -fx-font-size: 17px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #FFFFFF;
+    -fx-effect: dropshadow(gaussian, rgba(255, 255, 255, 0.30), 14, 0.30, 0, 0);
+}
+.button-primary:hover {
+    -fx-effect: dropshadow(gaussian, rgba(255, 255, 255, 0.45), 18, 0.35, 0, 0);
+}
+/* 有背景图时：白色发光效果，保证深色/浅色背景都醒目 */
+.has-bg .page-title {
+    -fx-text-fill: #FFFFFF;
+    -fx-effect: dropshadow(gaussian, rgba(255, 255, 255, 0.50), 16, 0.40, 0, 0);
+}

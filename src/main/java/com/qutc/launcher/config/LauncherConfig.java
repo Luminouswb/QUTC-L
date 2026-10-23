@@ -63,6 +63,13 @@ public final class LauncherConfig {
     public String homeBackground;
     /** 背景显示方式：cover=填充铺满（裁边），contain=完整显示（留边）。 */
     public String backgroundMode = "cover";
+    // ---- 字体（留空 = 用主题默认） ----
+    /** 左侧导航字体族。 */
+    public String navFont;
+    /** 主页标题 + 主按钮字体族。 */
+    public String homeFont;
+    /** 标注/卡片标题/辅助文字字体族。 */
+    public String labelFont;
     public String logLevel = "INFO";
     public String language = "zh_CN";
     public boolean closeLauncherAfterGameStart = false;
@@ -127,8 +134,24 @@ public final class LauncherConfig {
         if (!"contain".equalsIgnoreCase(backgroundMode) && !"cover".equalsIgnoreCase(backgroundMode)) {
             backgroundMode = "cover";
         }
+        navFont = sanitizeFont(navFont);
+        homeFont = sanitizeFont(homeFont);
+        labelFont = sanitizeFont(labelFont);
         if (logLevel == null || logLevel.isBlank()) {
             logLevel = "INFO";
         }
+    }
+
+    /** 字体族名只保留安全字符，避免破坏生成的 CSS；空/非法返回 null。 */
+    private static String sanitizeFont(String value) {
+        if (value == null) {
+            return null;
+        }
+        String text = value.trim();
+        if (text.isEmpty()) {
+            return null;
+        }
+        text = text.replaceAll("[\"'{};\\\\]", "").trim();
+        return text.isEmpty() ? null : text;
     }
 }

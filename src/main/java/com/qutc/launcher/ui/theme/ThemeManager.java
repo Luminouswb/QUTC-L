@@ -51,9 +51,39 @@ public final class ThemeManager {
             scene.getStylesheets().remove(installedAccentSheet);
             installedAccentSheet = null;
         }
-        String sheet = dataUri(accentCss(accentColor()));
+        String sheet = dataUri(buildSheet());
         scene.getStylesheets().add(sheet);
         installedAccentSheet = sheet;
+    }
+
+    /** 强调色 + 字体选择合成一张样式表。 */
+    public static String buildSheet() {
+        return accentCss(accentColor()) + "\n" + fontCss();
+    }
+
+    /** 用户自选字体：导航 / 主页 / 标注 三类，留空表示用主题默认。 */
+    public static String fontCss() {
+        LauncherConfig config = ConfigManager.get();
+        StringBuilder css = new StringBuilder();
+        appendFontRule(css, ".page-title, .page-subtitle, .button-primary", config.homeFont);
+        appendFontRule(css,
+                ".nav-button, .nav-button-selected, .sub-nav-button, .sub-nav-button-selected",
+                config.navFont);
+        appendFontRule(css,
+                ".card-title, .version-name, .version-meta, .badge, .value-big,"
+                        + " .tab-pane > .tab-header-area .tab .tab-label",
+                config.labelFont);
+        return css.toString();
+    }
+
+    private static void appendFontRule(StringBuilder css, String selectors, String family) {
+        if (family == null || family.isBlank()) {
+            return;
+        }
+        css.append(selectors)
+                .append(" { -fx-font-family: \"")
+                .append(family)
+                .append("\", \"Microsoft YaHei UI\"; }\n");
     }
 
     /** 重新套用（设置页保存后用）。 */

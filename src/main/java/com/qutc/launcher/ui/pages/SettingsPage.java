@@ -82,6 +82,10 @@ public final class SettingsPage implements Page {
     private final javafx.scene.control.ColorPicker accentPicker = new javafx.scene.control.ColorPicker();
     private final ComboBox<String> backgroundModeBox = new ComboBox<>();
     private final Label backgroundStatus = new Label();
+    private static final String FONT_DEFAULT = "默认（主题字体）";
+    private final ComboBox<String> navFontBox = new ComboBox<>();
+    private final ComboBox<String> homeFontBox = new ComboBox<>();
+    private final ComboBox<String> labelFontBox = new ComboBox<>();
 
     private final Label dataDirLabel = new Label();
     private final Label cacheLabel = new Label();
@@ -148,6 +152,17 @@ public final class SettingsPage implements Page {
         backgroundModeBox.setItems(FXCollections.observableArrayList("填充（铺满）", "完整显示（不裁）"));
         backgroundModeBox.setValue("填充（铺满）");
         backgroundModeBox.setPrefWidth(200);
+
+        java.util.List<String> families = new ArrayList<>(javafx.scene.text.Font.getFamilies());
+        families.sort(String.CASE_INSENSITIVE_ORDER);
+        java.util.List<String> fontItems = new ArrayList<>();
+        fontItems.add(FONT_DEFAULT);
+        fontItems.addAll(families);
+        for (ComboBox<String> box : List.of(navFontBox, homeFontBox, labelFontBox)) {
+            box.setItems(FXCollections.observableArrayList(fontItems));
+            box.setValue(FONT_DEFAULT);
+            box.setPrefWidth(260);
+        }
         themeBox.setItems(FXCollections.observableArrayList("dark", "light"));
         themeBox.setConverter(new javafx.util.StringConverter<>() {
             @Override
@@ -216,6 +231,7 @@ public final class SettingsPage implements Page {
                 accountCard(),
                 updateCard(),
                 behaviorCard(),
+                fontCard(),
                 pathCard(),
                 actions);
         loadFromConfig();
@@ -434,6 +450,32 @@ public final class SettingsPage implements Page {
         backgroundStatus.setText("未设置");
     }
 
+    private Node fontCard() {
+        Label hint = new Label("列表里是系统已安装字体；选「默认」用主题自带搭配");
+        hint.getStyleClass().add("muted");
+        return section("字体",
+                row("左侧导航", navFontBox, new Label("导航栏文字（含下载中心二级分类）")),
+                row("主页标题与按钮", homeFontBox, new Label("影响「开始你的冒险」与「开始游戏」")),
+                row("标注与说明", labelFontBox, new Label("卡片标题、版本名、辅助文字、徽标")),
+                hint);
+    }
+
+    private static void setFontValue(ComboBox<String> box, String family) {
+        if (family == null || family.isBlank()) {
+            box.setValue(FONT_DEFAULT);
+            return;
+        }
+        if (!box.getItems().contains(family)) {
+            box.getItems().add(family);
+        }
+        box.setValue(family);
+    }
+
+    private static String fontValue(ComboBox<String> box) {
+        String value = box.getValue();
+        return value == null || FONT_DEFAULT.equals(value) ? null : value;
+    }
+
     private Node pathCard() {
         dataDirLabel.getStyleClass().add("muted");
         cacheLabel.getStyleClass().add("muted");
@@ -533,6 +575,9 @@ public final class SettingsPage implements Page {
                 ? "未设置" : "当前：" + config.homeBackground);
         backgroundModeBox.setValue("contain".equalsIgnoreCase(config.backgroundMode)
                 ? "完整显示（不裁）" : "填充（铺满）");
+        setFontValue(navFontBox, config.navFont);
+        setFontValue(homeFontBox, config.homeFont);
+        setFontValue(labelFontBox, config.labelFont);
         dataDirLabel.setText(AppPaths.root().toString());
         cacheLabel.setText("当前占用 " + formatSize(Downloader.sizeOf(AppPaths.cacheDir())));
         updateCustomBaseVisibility();
@@ -661,6 +706,9 @@ public final class SettingsPage implements Page {
             config.logLevel = logLevelBox.getValue();
             config.theme = "light".equalsIgnoreCase(themeBox.getValue()) ? "light" : "dark";
             config.backgroundMode = "完整显示（不裁）".equals(backgroundModeBox.getValue()) ? "contain" : "cover";
+            config.navFont = fontValue(navFontBox);
+            config.homeFont = fontValue(homeFontBox);
+            config.labelFont = fontValue(labelFontBox);
             javafx.scene.paint.Color accent = accentPicker.getValue();
             config.themeColor = accent == null ? ThemeManager.DEFAULT_ACCENT
                     : String.format(java.util.Locale.ROOT, "#%02x%02x%02x",
