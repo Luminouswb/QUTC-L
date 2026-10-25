@@ -44,6 +44,16 @@ public final class NavBar extends VBox {
         VBox.setVgrow(spacer, Priority.ALWAYS);
         getChildren().add(spacer);
 
+        // 导航栏底部：当前账号皮肤的 3D 全身预览
+        SkinPreview3D skinPreview = new SkinPreview3D(168, 150);
+        skinPreview.setMaxWidth(Double.MAX_VALUE);
+        getChildren().add(skinPreview);
+        com.qutc.launcher.ui.service.SkinService.addListener(
+                () -> skinPreview.setSkin(
+                        com.qutc.launcher.ui.service.SkinService.skinImage(),
+                        com.qutc.launcher.ui.service.SkinService.slim()));
+        com.qutc.launcher.ui.service.SkinService.refreshAsync();
+
         Label footer = new Label("QUTC " + Launcher.VERSION + "\n数据目录见设置");
         footer.getStyleClass().add("nav-footer");
         footer.setPadding(new javafx.geometry.Insets(8, 12, 12, 14));

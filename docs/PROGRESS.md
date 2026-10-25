@@ -914,3 +914,12 @@ UI 美化收尾：浅色主题、主题切换持久化、列表/徽标细节打�
 - 设置页新增「字体」卡：左侧导航 / 主页标题与按钮 / 标注与说明 三个下拉，选项来自 `Font.getFamilies()`（系统已装字体），带「默认（主题字体）」项。
 - 真机验证：选 等线(导航)+微软雅黑(主页)+等线(标注) 后重启，标题/导航/按钮字形全部变化；截图 `target/ui125-home-custom-font.png`、字体卡 `target/ui122-font-picker.png`。
 - 测试：144/144 通过；字体为空时回退主题默认搭配。
+## 账号皮肤头像 + 导航栏 3D 皮肤预览
+
+- 新增 `core/skin/Skins.java`：皮肤解码、旧版 64×32 → 64×64 兼容、Slim 判断（臂宽透明列）、程序生成的默认皮肤、JavaFX Image 转换。
+- 新增 `ui/service/SkinService.java`：读取当前账号 → 命中缓存 `cache/skins/<accountKey>.png` 或从 `skinUrl` 下载 → 通知监听器（FX 线程）。
+- 新增 `ui/components/SkinHeadView.java`：从皮肤裁 8×8 脸 + 帽子层（40,8），最近邻放大到 34px，圆角裁切，替换账号胶囊里的字母头像。
+- 新增 `ui/components/SkinMesh.java`：按 6 面 UV 构建长方体 MeshView（三角形必须是「点/纹理」成对索引）。
+- 新增 `ui/components/SkinPreview3D.java`：SubScene + PerspectiveCamera（z=-262, FOV 32），头/帽/身/双臂/双腿六个长方体，像素尺寸直接乘 4.6 缩放（避免节点 scale 以包围盒中心为 pivot 的错位），绕 Y 轴 -18°~18° 缓慢摆动，鼠标拖动可手动旋转；导航栏底部 168×150 展示，带半透明圆角底。
+- 修掉的坑：① MeshView 的 faces 数组必须每三角形 6 个索引（point/texCoord 成对），否则整个网格不渲染；② JavaFX 节点 scale 以布局包围盒中心为 pivot，改用「几何尺寸×缩放 + translate」烘焙。
+- 截图：`target/ui156-skin-done.png`；测试 144/144；`mvn -o compile` 通过。

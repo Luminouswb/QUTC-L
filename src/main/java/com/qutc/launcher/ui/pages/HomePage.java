@@ -21,6 +21,7 @@ import com.qutc.launcher.ui.components.AccountMenuPopup;
 import com.qutc.launcher.ui.components.Dialogs;
 import com.qutc.launcher.ui.components.GameLogWindow;
 import com.qutc.launcher.ui.service.VersionService;
+import com.qutc.launcher.ui.service.SkinService;
 import com.qutc.launcher.utils.HashUtils;
 import com.qutc.launcher.utils.Log;
 import com.qutc.launcher.utils.OsUtils;
@@ -72,6 +73,9 @@ public final class HomePage implements Page {
 
     private final StackPane avatar = new StackPane();
     private final Label avatarText = new Label("?");
+    private final com.qutc.launcher.ui.components.SkinHeadView headView =
+            new com.qutc.launcher.ui.components.SkinHeadView(34, 9);
+    private volatile Account currentAccount;
     private final Label accountName = new Label("未登录");
     private final Label accountType = new Label("点击切换账号");
     private final HBox accountChip = new HBox(10);
@@ -323,7 +327,9 @@ public final class HomePage implements Page {
     private void buildAccountChip() {
         avatar.getStyleClass().add("avatar-circle");
         avatarText.getStyleClass().add("avatar-text");
-        avatar.getChildren().setAll(avatarText);
+        avatarText.setVisible(false);
+        headView.setVisible(false);
+        avatar.getChildren().setAll(headView, avatarText);
         accountName.getStyleClass().add("version-name");
         accountType.getStyleClass().add("version-meta");
         VBox info = new VBox(2, accountName, accountType);
@@ -332,6 +338,22 @@ public final class HomePage implements Page {
         accountChip.getStyleClass().add("account-chip");
         Tooltip.install(accountChip, new Tooltip("点击切换账号 / 登录"));
         accountChip.setOnMouseClicked(e -> showAccountMenu());
+
+        SkinService.addListener(this::applyAvatarSkin);
+        SkinService.refreshAsync();
+    }
+
+    /** 用当前皮肤头部替换字母头像。 */
+    private void applyAvatarSkin() {
+        Account account = currentAccount;
+        if (account == null) {
+            headView.setVisible(false);
+            avatarText.setVisible(true);
+            return;
+        }
+        headView.setSkin(SkinService.skinImage());
+        headView.setVisible(true);
+        avatarText.setVisible(false);
     }
 
     // ---------- 数据刷新 ----------
@@ -450,10 +472,13 @@ public final class HomePage implements Page {
         }).thenAccept(maybe -> Async.ui(() -> {
             auth = AuthService.defaults();
             Account account = maybe.orElse(null);
+            currentAccount = account;
             if (account == null) {
                 avatarText.setText("?");
                 accountName.setText("未登录");
                 accountType.setText("点击登录 / 切换");
+                applyAvatarSkin();
+                SkinService.refreshAsync();
                 return;
             }
             avatarText.setText(account.name().substring(0, 1).toUpperCase());
@@ -464,6 +489,8 @@ public final class HomePage implements Page {
                         || account.authServerName().isBlank() ? "" : " · " + account.authServerName());
                 case OFFLINE -> "离线账号";
             });
+            applyAvatarSkin();
+            SkinService.refreshAsync(this::applyAvatarSkin);
         }));
     }
 
