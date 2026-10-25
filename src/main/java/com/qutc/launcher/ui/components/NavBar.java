@@ -45,7 +45,7 @@ public final class NavBar extends VBox {
         getChildren().add(spacer);
 
         // 导航栏底部：当前账号皮肤的 3D 全身预览
-        SkinPreview3D skinPreview = new SkinPreview3D(168, 150);
+        SkinFlat2D skinPreview = new SkinFlat2D(168, 150);
         skinPreview.setMaxWidth(Double.MAX_VALUE);
         getChildren().add(skinPreview);
         com.qutc.launcher.ui.service.SkinService.addListener(

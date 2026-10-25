@@ -89,6 +89,10 @@ public final class SkinService {
 
     /** 后台线程执行：解析账号 → 缓存命中则直接读，否则下载。 */
     private static void load() {
+        if (System.getProperty("qutc.skin.default") != null) {
+            apply(Skins.defaultSkin(), false);
+            return;
+        }
         Account account = AccountStore.defaults().current().orElse(null);
         String key = account == null ? "default" : safe(account.storageKey());
         Path dir = AppPaths.cacheDir().resolve("skins");

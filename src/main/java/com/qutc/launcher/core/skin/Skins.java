@@ -111,6 +111,62 @@ public final class Skins {
     }
 
     /** 没有可用皮肤时的默认皮肤（程序生成的 Steve 风格，不依赖外部资源）。 */
+    /**
+     * 把 1.8+ 的叠加层（帽子/外套/袖子/裤腿）预先合成到基础层。
+     *
+     * <p>JavaFX 3D 不做贴图 alpha 混合，半透明 overlay 会遮住底层，
+     * 所以这里在 2D 阶段把 overlay 的像素直接画进基础层，3D 用一个不透明贴图。
+     */
+    public static BufferedImage bakeOverlay(BufferedImage skin) {
+        if (skin == null || skin.getWidth() < SIZE || skin.getHeight() < SIZE) {
+            return skin;
+        }
+        BufferedImage out = new BufferedImage(SIZE, SIZE, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = out.createGraphics();
+        g.drawImage(skin, 0, 0, null);
+        g.dispose();
+        // 帽子层 ×1
+        overlay(out, 0, 0, 32, 16, 32, 0);
+        // 外套 / 右袖
+        overlay(out, 16, 16, 24, 16, 16, 32);
+        overlay(out, 40, 16, 16, 16, 40, 32);
+        // 左臂 / 左袖在 64x64 皮肤里位于下半区 (y 48..64)
+        overlay(out, 32, 48, 16, 16, 48, 48);
+        return out;
+    }
+
+    private static void overlay(BufferedImage img, int dx, int dy, int w, int h, int sx, int sy) {
+        for (int y = 0; y < h; y++) {
+            for (int x = 0; x < w; x++) {
+                int src = img.getRGB(sx + x, sy + y);
+                int alpha = src >>> 24;
+                if (alpha == 0) {
+                    continue;
+                }
+                if (alpha == 255) {
+                    img.setRGB(dx + x, dy + y, src);
+                } else {
+                    int dst = img.getRGB(dx + x, dy + y);
+                    img.setRGB(dx + x, dy + y, blend(dst, src, alpha));
+                }
+            }
+        }
+    }
+
+    private static int blend(int dst, int src, int srcAlpha) {
+        int sr = (src >> 16) & 0xFF;
+        int sg = (src >> 8) & 0xFF;
+        int sb = src & 0xFF;
+        int dr = (dst >> 16) & 0xFF;
+        int dg = (dst >> 8) & 0xFF;
+        int db = dst & 0xFF;
+        int a = srcAlpha;
+        int r = (sr * a + dr * (255 - a)) / 255;
+        int g = (sg * a + dg * (255 - a)) / 255;
+        int b = (sb * a + db * (255 - a)) / 255;
+        return 0xFF000000 | (r << 16) | (g << 8) | b;
+    }
+
     public static Image defaultSkin() {
         Image cached = defaultImage;
         if (cached != null) {

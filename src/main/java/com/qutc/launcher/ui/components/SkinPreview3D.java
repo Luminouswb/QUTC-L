@@ -130,24 +130,40 @@ public final class SkinPreview3D extends Region {
                         new SkinMesh.Uv(48, 20, 4, 12),
                         new SkinMesh.Uv(44, 16, armWidth, 4),
                         new SkinMesh.Uv(48, 16, 4, 4)),
-                // 左臂
+                // 左臂（64x64 皮肤下半区）
                 part(tex, armWidth, 12, 4, 6, -18, 0,
-                        new SkinMesh.Uv(36, 20, armWidth, 12),
-                        new SkinMesh.Uv(44, 20, armWidth, 12),
-                        new SkinMesh.Uv(40, 20, 4, 12),
-                        new SkinMesh.Uv(32, 20, 4, 12),
-                        new SkinMesh.Uv(36, 16, armWidth, 4),
-                        new SkinMesh.Uv(40, 16, 4, 4)),
+                        new SkinMesh.Uv(36, 52, armWidth, 12),
+                        new SkinMesh.Uv(44, 52, armWidth, 12),
+                        new SkinMesh.Uv(32, 52, 4, 12),
+                        new SkinMesh.Uv(40, 52, 4, 12),
+                        new SkinMesh.Uv(36, 48, armWidth, 4),
+                        new SkinMesh.Uv(40, 48, 4, 4)),
                 // 右腿
                 part(tex, 4, 12, 4, -2, -6, 0,
                         new SkinMesh.Uv(4, 20, 4, 12), new SkinMesh.Uv(12, 20, 4, 12),
                         new SkinMesh.Uv(0, 20, 4, 12), new SkinMesh.Uv(8, 20, 4, 12),
                         new SkinMesh.Uv(4, 16, 4, 4), new SkinMesh.Uv(8, 16, 4, 4)),
-                // 左腿
+                // 叠加层：帽子(头发)/外套/袖子，逐像素面片（不去烘焙、不遮脸）
+                overlayPart(image, 8, 8, 8, 0, -28, 0, 0.35f,
+                        new SkinMesh.Uv(40, 8, 8, 8), new SkinMesh.Uv(56, 8, 8, 8),
+                        new SkinMesh.Uv(32, 8, 8, 8), new SkinMesh.Uv(48, 8, 8, 8),
+                        new SkinMesh.Uv(40, 0, 8, 8), new SkinMesh.Uv(48, 0, 8, 8)),
+                overlayPart(image, 8, 12, 4, 0, -18, 0, 0.30f,
+                        new SkinMesh.Uv(20, 36, 8, 12), new SkinMesh.Uv(32, 36, 8, 12),
+                        new SkinMesh.Uv(28, 36, 4, 12), new SkinMesh.Uv(16, 36, 4, 12),
+                        new SkinMesh.Uv(20, 32, 8, 4), new SkinMesh.Uv(28, 32, 8, 4)),
+                overlayPart(image, armWidth, 12, 4, -6, -18, 0, 0.28f,
+                        new SkinMesh.Uv(44, 36, armWidth, 12), new SkinMesh.Uv(52, 36, armWidth, 12),
+                        new SkinMesh.Uv(40, 36, 4, 12), new SkinMesh.Uv(48, 36, 4, 12),
+                        new SkinMesh.Uv(44, 32, armWidth, 4), new SkinMesh.Uv(48, 32, 4, 4)),
+                overlayPart(image, armWidth, 12, 4, 6, -18, 0, 0.28f,
+                        new SkinMesh.Uv(52, 52, armWidth, 12), new SkinMesh.Uv(60, 52, armWidth, 12),
+                        new SkinMesh.Uv(48, 52, 4, 12), new SkinMesh.Uv(56, 52, 4, 12),
+                        new SkinMesh.Uv(52, 48, armWidth, 4), new SkinMesh.Uv(56, 48, 4, 4)),                // 左腿（64x64 皮肤下半区）
                 part(tex, 4, 12, 4, 2, -6, 0,
-                        new SkinMesh.Uv(20, 20, 4, 12), new SkinMesh.Uv(28, 20, 4, 12),
-                        new SkinMesh.Uv(24, 20, 4, 12), new SkinMesh.Uv(16, 20, 4, 12),
-                        new SkinMesh.Uv(20, 16, 4, 4), new SkinMesh.Uv(24, 16, 4, 4)));
+                        new SkinMesh.Uv(20, 52, 4, 12), new SkinMesh.Uv(28, 52, 4, 12),
+                        new SkinMesh.Uv(16, 52, 4, 12), new SkinMesh.Uv(24, 52, 4, 12),
+                        new SkinMesh.Uv(20, 48, 4, 4), new SkinMesh.Uv(24, 48, 4, 4)));
     }
 
     /** 像素单位直接乘缩放，避免节点缩放以包围盒中心为 pivot 造成错位。 */
@@ -162,6 +178,16 @@ public final class SkinPreview3D extends Region {
         return view;
     }
 
+    private static javafx.scene.Group overlayPart(Image image, float w, float h, float d,
+                                                  float x, float y, float z, float grow,
+                                                  SkinMesh.Uv... uvs) {
+        javafx.scene.Group view = SkinMesh.pixelPart(image, TEX, w * SCALE, h * SCALE, d * SCALE,
+                grow * SCALE, uvs[0], uvs[1], uvs[2], uvs[3], uvs[4], uvs[5]);
+        view.setTranslateX(x * SCALE);
+        view.setTranslateY(y * SCALE + CENTER_Y);
+        view.setTranslateZ(z * SCALE);
+        return view;
+    }
     /** 最近邻放大：让 3D 贴图保持像素风，不被线性过滤糊掉。 */
     private static Image pixelate(Image src, int factor) {
         int w = (int) src.getWidth();
