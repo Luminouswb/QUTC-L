@@ -100,11 +100,11 @@ public final class SkinService {
         if (!key.equals(accountKey) || image == null) {
             accountKey = key;
             BufferedImage loaded = readCache(cache);
-            if (loaded == null && account != null && account.skinUrl() != null
-                    && !account.skinUrl().isBlank()) {
+            String skinUrl = skinUrlFor(account);
+            if (loaded == null && skinUrl != null) {
                 try {
                     Files.createDirectories(dir);
-                    byte[] data = Http.getBytes(account.skinUrl(), 30);
+                    byte[] data = Http.getBytes(skinUrl, 30);
                     BufferedImage decoded = Skins.normalize(Skins.decode(data));
                     if (decoded != null) {
                         javax.imageio.ImageIO.write(decoded, "png", cache.toFile());
@@ -121,6 +121,45 @@ public final class SkinService {
                 apply(Skins.defaultSkin(), false);
             }
         }
+    }
+
+    /** 微软用 profile 里的 skinUrl；外置登录按 uuid 向验证服务器查 textures；离线/无皮肤返回 null。 */
+    private static String skinUrlFor(Account account) {
+        if (account == null) {
+            return null;
+        }
+        if (account.skinUrl() != null && !account.skinUrl().isBlank()) {
+            return account.skinUrl();
+        }
+        if (!account.isYggdrasil()) {
+            return null;
+        }
+        String base = account.authServer();
+        String uuid = account.uuid();
+        if (base == null || base.isBlank() || uuid == null || uuid.isBlank()) {
+            return null;
+        }
+        base = base.replaceAll("/+$", "");
+        try {
+            String json = Http.getString(base + "/sessionserver/session/minecraft/profile/"
+                    + uuid.replace("-", ""), 20);
+            var root = com.qutc.launcher.utils.JsonUtils.parse(json);
+            for (var property : root.path("properties")) {
+                if ("textures".equals(property.path("name").asText())) {
+                    String value = property.path("value").asText("");
+                    String decoded = new String(java.util.Base64.getDecoder().decode(value),
+                            java.nio.charset.StandardCharsets.UTF_8);
+                    var textures = com.qutc.launcher.utils.JsonUtils.parse(decoded);
+                    String url = textures.path("textures").path("SKIN").path("url").asText(null);
+                    if (url != null && !url.isBlank()) {
+                        return url;
+                    }
+                }
+            }
+        } catch (Exception error) {
+            Log.warn("Skin", "读取第三方皮肤失败: " + error.getMessage());
+        }
+        return null;
     }
 
     /** 账号切换后强制重新读缓存（例如刚换过皮肤）。 */

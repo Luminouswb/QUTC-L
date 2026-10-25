@@ -167,6 +167,7 @@ public final class Skins {
         return 0xFF000000 | (r << 16) | (g << 8) | b;
     }
 
+    /** 没有可用皮肤时的默认皮肤（程序生成的 Steve，64x64 标准布局）。 */
     public static Image defaultSkin() {
         Image cached = defaultImage;
         if (cached != null) {
@@ -174,58 +175,70 @@ public final class Skins {
         }
         BufferedImage img = new BufferedImage(SIZE, SIZE, BufferedImage.TYPE_INT_ARGB);
         Color skinTone = new Color(0xC6, 0x9A, 0x6D);
+        Color skinShade = new Color(0xB2, 0x88, 0x5E);
         Color hair = new Color(0x3B, 0x28, 0x1A);
-        Color shirt = new Color(0x3B, 0x6E, 0xC9);
-        Color shirtDark = new Color(0x2E, 0x57, 0x9E);
-        Color pants = new Color(0x2B, 0x2F, 0x4E);
-        Color shoes = new Color(0x55, 0x5A, 0x66);
+        Color shirt = new Color(0x2E, 0x8B, 0x87);
+        Color shirtDark = new Color(0x25, 0x74, 0x70);
+        Color pants = new Color(0x3A, 0x3F, 0x7A);
+        Color pantsDark = new Color(0x2C, 0x30, 0x60);
+        Color shoes = new Color(0x4A, 0x4E, 0x58);
+
+        // 头：脸（正）+ 头发（顶/侧/后）
         fill(img, 8, 8, 8, 8, skinTone);
-        fill(img, 8, 8, 8, 3, hair);
-        fill(img, 0, 8, 8, 8, skinTone);
-        fill(img, 0, 8, 8, 2, hair);
-        fill(img, 16, 8, 8, 8, skinTone);
-        fill(img, 16, 8, 8, 2, hair);
-        fill(img, 24, 8, 8, 8, skinTone);
-        fill(img, 24, 8, 8, 5, hair);
+        fill(img, 8, 8, 8, 2, hair);
         fill(img, 8, 0, 8, 8, hair);
-        fill(img, 20, 20, 8, 12, shirt);
-        fill(img, 20, 20, 8, 3, skinTone);
-        fill(img, 32, 20, 8, 12, shirt);
-        fill(img, 16, 20, 4, 12, shirtDark);
-        fill(img, 28, 20, 4, 12, shirtDark);
-        fill(img, 44, 20, 4, 12, shirt);
-        fill(img, 52, 20, 4, 12, shirt);
-        fill(img, 40, 20, 4, 12, shirtDark);
-        fill(img, 48, 20, 4, 12, shirtDark);
-        fill(img, 44, 16, 4, 4, skinTone);
-        fill(img, 36, 20, 4, 12, shirt);
-        fill(img, 48, 20, 4, 12, shirt);
-        fill(img, 32, 20, 4, 12, shirtDark);
-        fill(img, 36, 16, 4, 4, skinTone);
-        fill(img, 4, 20, 4, 12, pants);
-        fill(img, 12, 20, 4, 12, pants);
-        fill(img, 0, 20, 4, 12, pants);
-        fill(img, 8, 20, 4, 12, pants);
-        fill(img, 4, 28, 4, 4, shoes);
-        fill(img, 12, 28, 4, 4, shoes);
-        fill(img, 20, 20, 4, 12, pants);
-        fill(img, 28, 20, 4, 12, pants);
-        fill(img, 24, 20, 4, 12, pants);
-        fill(img, 16, 20, 4, 12, pants);
-        fill(img, 20, 28, 4, 4, shoes);
-        fill(img, 28, 28, 4, 4, shoes);
-        // 脸部：眼睛
+        fill(img, 0, 8, 8, 8, hair);
+        fill(img, 16, 8, 8, 8, hair);
+        fill(img, 24, 8, 8, 8, hair);
+        fill(img, 16, 0, 8, 8, skinShade);
+        // 眼睛 / 嘴
         fill(img, 10, 12, 1, 1, new Color(0xEA, 0xF2, 0xFF));
         fill(img, 13, 12, 1, 1, new Color(0xEA, 0xF2, 0xFF));
         fill(img, 10, 13, 1, 1, new Color(0x2E, 0x4C, 0x9A));
         fill(img, 13, 13, 1, 1, new Color(0x2E, 0x4C, 0x9A));
-        fill(img, 11, 14, 1, 1, new Color(0x8A, 0x5F, 0x3C));
-        fill(img, 12, 14, 1, 1, new Color(0x8A, 0x5F, 0x3C));
+        fill(img, 11, 14, 2, 1, new Color(0x8A, 0x5F, 0x3C));
+        // 身体：正面衬衫 + 脖子
+        fill(img, 20, 20, 8, 12, shirt);
+        fill(img, 20, 20, 8, 2, skinTone);
+        fill(img, 32, 20, 8, 12, shirtDark);
+        fill(img, 16, 20, 4, 12, shirtDark);
+        fill(img, 28, 20, 4, 12, shirtDark);
+        fill(img, 20, 16, 8, 4, shirtDark);
+        fill(img, 28, 16, 8, 4, shirtDark);
+        // 右臂（x44..52）
+        arm(img, 44, skinTone, shirt, shirtDark);
+        // 左臂（下半区 x36..44）
+        arm(img, 36, skinTone, shirt, shirtDark);
+        // 右腿（x4..12）
+        leg(img, 4, pants, pantsDark, shoes);
+        // 左腿（下半区 x20..28）
+        leg(img, 20, pants, pantsDark, shoes);
         Image fx = toFxImage(img);
         defaultImage = fx;
         return fx;
     }
 
+    /** 画一条手臂：正面/背面/两侧/顶底，前 8 行袖子、后 3 行皮肤。 */
+    private static void arm(BufferedImage img, int x, Color skinTone, Color shirt, Color shirtDark) {
+        fill(img, x, 20, 4, 9, shirt);
+        fill(img, x, 29, 4, 3, skinTone);
+        fill(img, x + 8, 20, 4, 12, shirtDark);
+        fill(img, x - 4, 20, 4, 12, shirtDark);
+        fill(img, x + 4, 20, 4, 12, shirtDark);
+        fill(img, x, 16, 4, 4, shirt);
+        fill(img, x + 4, 16, 4, 4, skinTone);
+    }
+
+    /** 画一条腿：正面/背面/两侧/顶底，鞋在底部 2 行。 */
+    private static void leg(BufferedImage img, int x, Color pants, Color pantsDark, Color shoes) {
+        fill(img, x, 20, 4, 10, pants);
+        fill(img, x, 30, 4, 2, shoes);
+        fill(img, x + 8, 20, 4, 12, pantsDark);
+        fill(img, x - 4, 20, 4, 12, pantsDark);
+        fill(img, x + 4, 20, 4, 12, pantsDark);
+        fill(img, x, 16, 4, 4, pants);
+        fill(img, x + 4, 16, 4, 4, shoes);
+    }
     private static void fill(BufferedImage img, int x, int y, int w, int h, Color color) {
         Graphics2D g = img.createGraphics();
         g.setColor(color);

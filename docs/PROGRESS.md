@@ -944,3 +944,14 @@ UI 美化收尾：浅色主题、主题切换持久化、列表/徽标细节打�
 - 真机截图：`target/ui179-flat2d.png`（女性皮肤，头/发/外套/裙子/袜子/靴子全部正确）、
   `target/ui182-flat2d-x4.png`（4× 放大后的清晰版，当前账号为离线账号所以显示默认皮肤）。
 - 头像 `SkinHeadView` 不变（脸 + 帽子层，像素风）。
+## 皮肤显示规则修复（离线 Steve / 正版 / 第三方）
+
+- 离线账号：**重写内置默认皮肤**（64×64 标准布局），之前左臂/左腿画在 y=20 区、而渲染读下半区 y=52，
+  导致离线 Steve 缺胳膊少腿；现在左臂 (36,52)、左腿 (20,52) 全部按 64×64 布局绘制，头像/全身都正常。
+- 微软正版：继续用 profile 的 `skinUrl`。
+- 第三方（Yggdrasil）：`SkinService.skinUrlFor()` 在 `skinUrl` 为空时请求
+  `{authServer}/sessionserver/session/minecraft/profile/{uuid}`，解 base64 textures 取 SKIN.url；
+  拉到后照常缓存到 `cache/skins/<key>.png`。
+- 渲染：`SkinFlat2D` 2D 正视图（头/身/双臂/双腿 + 帽子/外套/袖子/裤腿叠加层），4× 最近邻放大。
+- 证据：`target/ui183-steve-full.png`（离线账号 lelele 的 Steve 全身+头像）、`target/ui184-steve-zoom.png`。
+- 测试：144/144 通过。
