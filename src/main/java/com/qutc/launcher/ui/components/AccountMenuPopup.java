@@ -18,7 +18,7 @@ import java.util.function.Consumer;
 /**
  * 账号切换弹层：替代 JavaFX 默认的白色 ContextMenu。
  *
- * <p>暗色圆角面板 + 账号行（当前账号打勾）+ 分隔线 + 操作项，跟随主窗口主题。
+ * <p>暗色圆角面板 + 账号行（当前账号打勾、悬停出现删除按钮）+ 分隔线 + 操作项。
  */
 public final class AccountMenuPopup {
 
@@ -32,17 +32,20 @@ public final class AccountMenuPopup {
                             Runnable onOffline,
                             Runnable onMicrosoft,
                             Runnable onYggdrasil,
-                            Runnable onRefresh) {
+                            Runnable onRefresh,
+                            Consumer<Account> onDelete) {
         VBox panel = new VBox(4);
         panel.getStyleClass().add("account-popup");
-        panel.setPrefWidth(300);
+        panel.setPrefWidth(310);
 
         panel.getChildren().add(header(current));
         if (!accounts.isEmpty()) {
             panel.getChildren().add(separator());
             for (Account account : accounts) {
                 boolean active = current != null && account.storageKey().equals(current.storageKey());
-                panel.getChildren().add(accountRow(account, active, () -> onSwitch.accept(account)));
+                panel.getChildren().add(accountRow(account, active,
+                        () -> onSwitch.accept(account),
+                        onDelete == null ? null : () -> onDelete.accept(account)));
             }
         }
         panel.getChildren().add(separator());
@@ -60,7 +63,7 @@ public final class AccountMenuPopup {
         }
         javafx.geometry.Bounds bounds = anchor.localToScreen(anchor.getBoundsInLocal());
         if (bounds != null) {
-            popup.show(anchor, bounds.getMaxX() - 300, bounds.getMaxY() + 10);
+            popup.show(anchor, bounds.getMaxX() - 310, bounds.getMaxY() + 10);
         }
     }
 
@@ -70,8 +73,7 @@ public final class AccountMenuPopup {
         Region avatar = avatar(letter, 42);
         Label name = new Label(current == null ? "未登录" : current.name());
         name.getStyleClass().add("account-popup-name");
-        Label type = new Label(current == null ? "选择账号或登录"
-                : (current.isMicrosoft() ? "微软正版 · 令牌已加密保存" : "离线账号"));
+        Label type = new Label(current == null ? "选择账号或登录" : describe(current));
         type.getStyleClass().add("account-popup-meta");
         VBox info = new VBox(2, name, type);
         HBox box = new HBox(12, avatar, info);
@@ -80,11 +82,23 @@ public final class AccountMenuPopup {
         return box;
     }
 
-    private static Node accountRow(Account account, boolean active, Runnable action) {
+    private static String describe(Account account) {
+        if (account.isMicrosoft()) {
+            return "微软正版 · 令牌已加密保存";
+        }
+        if (account.isYggdrasil()) {
+            String server = account.authServerName();
+            return "第三方登录" + (server == null || server.isBlank() ? "" : " · " + server);
+        }
+        return "离线账号";
+    }
+
+    private static Node accountRow(Account account, boolean active, Runnable action, Runnable delete) {
         Region avatar = avatar(account.name().substring(0, 1).toUpperCase(), 30);
         Label name = new Label(account.name());
         name.getStyleClass().add("account-popup-row-name");
-        Label type = new Label(account.isMicrosoft() ? "微软正版" : "离线");
+        Label type = new Label(account.isMicrosoft() ? "微软正版"
+                : (account.isYggdrasil() ? "第三方登录" : "离线"));
         type.getStyleClass().add("account-popup-meta");
         VBox info = new VBox(1, name, type);
         Region spacer = new Region();
@@ -92,14 +106,29 @@ public final class AccountMenuPopup {
         Label check = new Label(active ? "✓" : "");
         check.getStyleClass().add("account-popup-check");
 
-        HBox row = new HBox(10, avatar, info, spacer, check);
+        Label trash = new Label("⌫");
+        trash.getStyleClass().add("account-popup-delete");
+        trash.setVisible(false);
+        if (delete != null) {
+            trash.setOnMouseClicked(event -> {
+                event.consume();
+                delete.run();
+            });
+        }
+
+        HBox row = new HBox(8, avatar, info, spacer, check, trash);
         row.setAlignment(Pos.CENTER_LEFT);
         row.getStyleClass().add("account-popup-row");
         if (active) {
             row.getStyleClass().add("account-popup-row-active");
         }
         row.setPadding(new Insets(8, 12, 8, 12));
-        row.setOnMouseClicked(e -> {
+        row.setOnMouseEntered(event -> trash.setVisible(true));
+        row.setOnMouseExited(event -> trash.setVisible(false));
+        row.setOnMouseClicked(event -> {
+            if (event.getTarget() == trash) {
+                return;
+            }
             action.run();
         });
         return row;

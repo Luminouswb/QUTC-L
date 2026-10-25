@@ -310,3 +310,12 @@
     -fx-border-color: rgba(20, 30, 60, 0.10);
     -fx-border-radius: 14;
 }
+.account-popup-delete {
+    -fx-text-fill: #6A7488;
+    -fx-font-size: 14px;
+    -fx-padding: 2 4 2 8;
+    -fx-cursor: hand;
+}
+.account-popup-delete:hover {
+    -fx-text-fill: #D64545;
+}

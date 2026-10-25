@@ -162,6 +162,23 @@ public final class SkinService {
         return null;
     }
 
+    /** 删除账号时清掉它的皮肤缓存。 */
+    public static void forget(Account account) {
+        if (account == null) {
+            return;
+        }
+        String key = safe(account.storageKey());
+        try {
+            Files.deleteIfExists(AppPaths.cacheDir().resolve("skins").resolve(key + ".png"));
+        } catch (IOException error) {
+            Log.warn("Skin", "删除皮肤缓存失败: " + error.getMessage());
+        }
+        if (key.equals(accountKey)) {
+            image = null;
+            accountKey = null;
+        }
+    }
+
     /** 账号切换后强制重新读缓存（例如刚换过皮肤）。 */
     public static void invalidate() {
         accountKey = null;

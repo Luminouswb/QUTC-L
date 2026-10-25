@@ -501,7 +501,7 @@ public final class HomePage implements Page {
             Optional<Account> current = auth.current();
             AccountMenuPopup.show(accountChip, current.orElse(null), accounts,
                     this::switchAccount, this::loginOffline, this::loginMicrosoft,
-                    this::loginYggdrasil, this::refreshAccountChip);
+                    this::loginYggdrasil, this::refreshAccountChip, this::deleteAccount);
         }));
     }
 
@@ -563,6 +563,39 @@ public final class HomePage implements Page {
             } catch (Exception error) {
                 Log.error("UI", "第三方登录异常", error);
                 Async.ui(() -> Dialogs.error("第三方登录失败", "发生异常", String.valueOf(error.getMessage())));
+            }
+        });
+    }
+
+    /** 删除账号：本地令牌/凭据 + 皮肤缓存一并清掉；删的是当前账号则自动切到下一个。 */
+    private void deleteAccount(Account account) {
+        Window owner = accountChip.getScene() == null ? null : accountChip.getScene().getWindow();
+        if (!Dialogs.confirm("删除账号",
+                "确定删除账号「" + account.display() + "」？",
+                "本地保存的登录令牌 / 凭据与皮肤缓存会一并删除，需要时可以重新登录。", owner)) {
+            return;
+        }
+        Async.run(() -> {
+            try {
+                boolean active = auth.current()
+                        .map(current -> current.storageKey().equals(account.storageKey()))
+                        .orElse(false);
+                auth.logout(account);
+                SkinService.forget(account);
+                if (active) {
+                    var remaining = auth.store().accounts();
+                    if (!remaining.isEmpty()) {
+                        auth.setCurrent(remaining.get(0));
+                    }
+                }
+                SkinService.invalidate();
+                Async.ui(() -> {
+                    statusLine.setText("已删除账号：" + account.name());
+                    refreshAccountChip();
+                    SkinService.refreshAsync();
+                });
+            } catch (IOException error) {
+                Async.ui(() -> Dialogs.error("删除账号失败", account.display(), error.getMessage()));
             }
         });
     }

@@ -741,3 +741,13 @@
     -fx-border-color: rgba(255, 255, 255, 0.06);
     -fx-border-radius: 14;
 }
+/* 账号弹层：悬停出现的删除按钮 */
+.account-popup-delete {
+    -fx-text-fill: #8A93A6;
+    -fx-font-size: 14px;
+    -fx-padding: 2 4 2 8;
+    -fx-cursor: hand;
+}
+.account-popup-delete:hover {
+    -fx-text-fill: #FF6B6B;
+}
