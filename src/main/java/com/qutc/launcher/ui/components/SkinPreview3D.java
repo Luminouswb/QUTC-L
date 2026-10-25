@@ -28,8 +28,8 @@ import javafx.util.Duration;
 public final class SkinPreview3D extends Region {
 
     private static final int TEX = 64;
-    private static final float SCALE = 4.6f;
-    private static final float CENTER_Y = 73.5f;
+    private static final float SCALE = 4.2f;
+    private static final float CENTER_Y = 67.2f;
 
     private final Group model = new Group();
     private final Rotate yaw = new Rotate(0, 0, 0, 0, Rotate.Y_AXIS);
@@ -65,9 +65,10 @@ public final class SkinPreview3D extends Region {
         camera.setNearClip(0.1);
         camera.setFarClip(2000);
         camera.setFieldOfView(32);
-        camera.setTranslateZ(-262);
+        camera.setTranslateZ(330);
+        camera.getTransforms().add(new Rotate(180, Rotate.Y_AXIS));
         subScene.setCamera(camera);
-        setStyle("-fx-background-color: rgba(255, 255, 255, 0.035); -fx-background-radius: 14;");
+        getStyleClass().add("skin-stage");
         shadow.setFill(javafx.scene.paint.Color.rgb(0, 0, 0, 0.55));
         shadow.setEffect(new javafx.scene.effect.GaussianBlur(7));
         getChildren().addAll(shadow, subScene);
@@ -102,15 +103,15 @@ public final class SkinPreview3D extends Region {
     private void apply(Image image, boolean slimModel) {
         model.getChildren().clear();
         Image tex = pixelate(image, 4);
+        if (System.getProperty("qutc.skin.fullquad") != null) {
+            SkinMesh.Uv all = new SkinMesh.Uv(0, 0, 64, 64);
+            model.getChildren().add(part(tex, 8, 8, 8, 0, -10, 0, all, all, all, all, all, all));
+            return;
+        }
         int armWidth = slimModel ? 3 : 4;
         int armBack = slimModel ? 51 : 52;
 
         model.getChildren().addAll(
-                // 帽子层（外圈）
-                part(tex, 8.6f, 8.6f, 8.6f, 0, -28, 0,
-                        new SkinMesh.Uv(40, 8, 8, 8), new SkinMesh.Uv(56, 8, 8, 8),
-                        new SkinMesh.Uv(32, 8, 8, 8), new SkinMesh.Uv(48, 8, 8, 8),
-                        new SkinMesh.Uv(40, 0, 8, 8), new SkinMesh.Uv(48, 0, 8, 8)),
                 // 头
                 part(tex, 8, 8, 8, 0, -28, 0,
                         new SkinMesh.Uv(8, 8, 8, 8), new SkinMesh.Uv(24, 8, 8, 8),

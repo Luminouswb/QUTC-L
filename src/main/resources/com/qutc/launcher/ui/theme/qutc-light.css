@@ -303,3 +303,10 @@
 .sub-nav-button { -fx-text-fill: #5b6478; }
 .sub-nav-button:hover { -fx-background-color: rgba(20, 30, 60, 0.06); -fx-text-fill: #232c42; }
 .sub-nav-button-selected { -fx-background-color: rgba(108, 92, 231, 0.14); -fx-text-fill: #4b3fc0; }
+/* ---------- 导航栏皮肤 3D 预览（浅色） ---------- */
+.skin-stage {
+    -fx-background-color: rgba(20, 30, 60, 0.05);
+    -fx-background-radius: 14;
+    -fx-border-color: rgba(20, 30, 60, 0.10);
+    -fx-border-radius: 14;
+}

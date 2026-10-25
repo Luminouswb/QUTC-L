@@ -734,3 +734,10 @@
     -fx-text-fill: #FFFFFF;
     -fx-effect: dropshadow(gaussian, rgba(255, 255, 255, 0.50), 16, 0.40, 0, 0);
 }
+/* ---------- 导航栏皮肤 3D 预览 ---------- */
+.skin-stage {
+    -fx-background-color: rgba(255, 255, 255, 0.035);
+    -fx-background-radius: 14;
+    -fx-border-color: rgba(255, 255, 255, 0.06);
+    -fx-border-radius: 14;
+}
